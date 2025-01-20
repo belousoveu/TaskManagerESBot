@@ -1,5 +1,6 @@
 package com.github.belousovea.taskmanageresbot.bot.actions;
 
+import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class StartAction implements BotAction {
 
     private String name = "start";
+    private final KeyboardFactory keyboardFactory;
 //    private final UserService userService;
 
     @Override
@@ -20,6 +22,7 @@ public class StartAction implements BotAction {
         return SendMessage.builder()
                 .chatId(dialog.getChatId())
                 .text(String.format("Привет, %s! Я храню для тебя напоминания", dialog.getUser().getUserName()))
+                .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.github.belousovea.taskmanageresbot.bot.actions;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
 import com.github.belousovea.taskmanageresbot.service.UserService;
 import lombok.Data;
@@ -22,9 +23,11 @@ public class GetUserTimeAction implements BotAction {
 
     private String name = "get_user_time";
     private final UserService userService;
+    private final KeyboardFactory keyboardFactory;
 
-    public GetUserTimeAction(final UserService userService) {
+    public GetUserTimeAction(final UserService userService, KeyboardFactory keyboardFactory) {
         this.userService = userService;
+        this.keyboardFactory = keyboardFactory;
     }
 
     @Override
@@ -38,14 +41,17 @@ public class GetUserTimeAction implements BotAction {
             long offsetInMinutes = Duration.between(LocalTime.now(), userTime).toMinutes();
             dialog.setUser(userService.saveUser(update.getMessage().getFrom(), offsetInMinutes));
             dialog.setCurrentState(Dialog.State.BASIC_STATE);
-            return sendMessageBuilder.text("Ок. Я посчитал разницу и буду учитывать ее при напоминаниях").build();
+            return sendMessageBuilder.text("Ок. Я посчитал разницу и буду учитывать ее при напоминаниях")
+                    .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState())).build();
         } catch (ElasticsearchException e) {
             log.error(e.getMessage());
-            return sendMessageBuilder.text("Не удалось сохранить данные. Попробуйте еще раз").build();
+            return sendMessageBuilder.text("Не удалось сохранить данные. Попробуйте еще раз")
+                    .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState())).build();
         } catch (Exception e) {
             log.error(e.getMessage());
             return sendMessageBuilder
-                    .text("Я не смог понять, который у вас час. Пришлите еще раз время в формате ЧЧ:ММ").build();
+                    .text("Я не смог понять, который у вас час. Пришлите еще раз время в формате ЧЧ:ММ")
+                    .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState())).build();
         }
     }
 

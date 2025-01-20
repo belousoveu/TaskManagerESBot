@@ -1,5 +1,6 @@
 package com.github.belousovea.taskmanageresbot.bot.actions;
 
+import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Data
 public class TimeSetupAction implements BotAction {
     private String name = "TimeSetup";
+    private final KeyboardFactory keyboardFactory;
 
     @Override
     public SendMessage replyMessage(Dialog dialog, Update update) {
@@ -25,6 +27,7 @@ public class TimeSetupAction implements BotAction {
                                 Давай сверим часы. У меня сейчас : %s
                                 Напиши, какое время показывают твои часы в формате HH:MM""",
                         update.getMessage().getFrom().getUserName(), LocalTime.now().format(formatter)))
+                .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
                 .build();
     }
 
