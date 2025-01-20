@@ -6,11 +6,18 @@ import lombok.Data;
 public class Dialog {
     private State currentState;
     long chatId;
-    UserDetails user;
+    User user;
 
 
-    public Dialog(long chatId) {
+    public Dialog(long chatId, User user) {
         this.chatId = chatId;
+        this.user = user;
+        if (user == null) {
+            currentState = State.TIME_SETUP;
+
+        } else {
+            currentState = State.BASIC_STATE;
+        }
     }
 
     public enum State {

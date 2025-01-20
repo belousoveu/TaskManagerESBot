@@ -2,6 +2,7 @@ package com.github.belousovea.taskmanageresbot.service;
 
 import com.github.belousovea.taskmanageresbot.bot.actions.BotAction;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
+import com.github.belousovea.taskmanageresbot.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,16 +18,19 @@ public class DialogManager {
 
     private final Map<Long, Dialog> dialogs = new HashMap<>();
     private final List<BotAction> actions;
+    private final UserService userService;
 
-    public DialogManager(List<BotAction> actions) {
+    public DialogManager(List<BotAction> actions, UserService userService) {
         this.actions = actions;
+        this.userService = userService;
     }
 
     public Dialog getDialog(Update update) {
         long chatId = getChatId(update);
         long userId = getUserId(update);
+        User user = userService.getUser(userId);
 
-        return dialogs.computeIfAbsent(chatId, Dialog::new);
+        return dialogs.computeIfAbsent(chatId, k -> new Dialog(chatId, user));
     }
 
     public SendMessage getAction(Update update) {
@@ -34,7 +38,7 @@ public class DialogManager {
             throw new NullPointerException("Update is null");
         }
         Dialog dialog = getDialog(update);
-        log.info("Actions: {}", actions.size());
+        log.info("Actions: {}", actions.size()); //TODO убрать
         BotAction defaultAction = actions.stream()
                 .filter(action -> "unknown".equals(action.getName())).findFirst().orElseThrow();
         for (BotAction action : actions) {
