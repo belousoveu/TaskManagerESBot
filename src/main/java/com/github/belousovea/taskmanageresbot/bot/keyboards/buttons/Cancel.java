@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class GetMemoList extends BotKeyboardButton implements MainMenu {
+public class Cancel extends BotKeyboardButton implements CancelMenu {
 
-    public GetMemoList() {
-        super(3, "\uD83D\uDDD2 Список напоминаний");
+    public Cancel() {
+        super(10, "Возврат в главное меню");
     }
 }

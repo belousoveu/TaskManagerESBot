@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class AddPeriodicMemo extends MainKeyboardButton {
+public class AddPeriodicMemo extends BotKeyboardButton implements MainMenu{
 
     public AddPeriodicMemo() {
         super(2, "➕ Добавить периодическое напоминание");

@@ -4,17 +4,17 @@ import lombok.Getter;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 
 @Getter
-public abstract class MainKeyboardButton {
+public abstract class BotKeyboardButton {
 
     private final int order;
     private final KeyboardButton keyboardButton;
 
-    public MainKeyboardButton(int order, String keyboardTitleText) {
+    public BotKeyboardButton(int order, String keyboardTitleText) {
         this.order = order;
         this.keyboardButton = new KeyboardButton(keyboardTitleText);
     }
 
-    public int compareTo(MainKeyboardButton mainKeyboardButton) {
+    public int compareTo(BotKeyboardButton mainKeyboardButton) {
         return this.order - mainKeyboardButton.order;
     }
 }

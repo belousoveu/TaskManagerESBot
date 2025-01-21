@@ -7,32 +7,28 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-
 @Component
 @Data
-public class TimeSetupAction implements BotAction {
-    private String name = "time_setup";
+public class AddMemoAction implements BotAction {
+    private String name = "memo";
     private final KeyboardFactory keyboardFactory;
 
     @Override
     public SendMessage replyMessage(Dialog dialog, Update update) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        dialog.setCurrentState(Dialog.State.GET_USER_TIME);
+        dialog.setCurrentState(Dialog.State.ADD_NEW_MEMO);
         return SendMessage.builder()
                 .chatId(dialog.getChatId())
-                .text(String.format("""
-                                Приветствую, %s!
-                                Давай сверим часы. У меня сейчас : %s
-                                Напиши, какое время показывают твои часы в формате HH:MM""",
-                        update.getMessage().getFrom().getUserName(), LocalTime.now().format(formatter)))
+                .text("Введите строку в формате:\n" +
+                        "ДД.ММ.ГГГГ ЧЧ:ММ Текст напоминания")
                 .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
                 .build();
     }
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-        return dialog.getCurrentState()==Dialog.State.TIME_SETUP;
+        return dialog.getCurrentState()==Dialog.State.BASIC_STATE
+                && update.hasMessage()
+                && update.getMessage().hasText()
+                && update.getMessage().getText().equals("➕ Добавить напоминание");
     }
 }

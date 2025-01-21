@@ -36,7 +36,7 @@ public class GetUserTimeAction implements BotAction {
         SendMessage.SendMessageBuilder<?, ?> sendMessageBuilder = SendMessage.builder().chatId(dialog.getChatId());
 
         try {
-            String userTimeString = getUserTime(update);
+            String userTimeString = parseTimeFromMessage(update);
             LocalTime userTime = LocalTime.parse(userTimeString, DateTimeFormatter.ofPattern("HH:mm"));
             long offsetInMinutes = Duration.between(LocalTime.now(), userTime).toMinutes();
             dialog.setUser(userService.saveUser(update.getMessage().getFrom(), offsetInMinutes));
@@ -65,7 +65,7 @@ public class GetUserTimeAction implements BotAction {
         return dialog.getCurrentState()== Dialog.State.GET_USER_TIME;
     }
 
-    private String getUserTime(Update update) {
+    private String parseTimeFromMessage(Update update) {
         String userMessage = update.getMessage().getText();
         String regex = "\\b(?:[01]?\\d|2[0-3]):[0-5]\\d\\b";
         Pattern pattern = Pattern.compile(regex);
