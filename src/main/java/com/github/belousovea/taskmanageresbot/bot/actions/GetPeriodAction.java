@@ -5,6 +5,8 @@ import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.exception.IllegalTimeReminderException;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
 import com.github.belousovea.taskmanageresbot.model.Memo;
+import com.github.belousovea.taskmanageresbot.model.Period;
+import com.github.belousovea.taskmanageresbot.service.MemoService;
 import com.github.belousovea.taskmanageresbot.utils.Literals;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -14,34 +16,35 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
-@Data
 @Slf4j
-public class GetNewMemoAction implements BotAction {
-    private String name = "new_memo";
+@Data
+public class GetPeriodAction implements BotAction {
+    private final String name = "get_period";
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final KeyboardFactory keyboardFactory;
-
+    private final MemoService memoService;
 
     @Override
     public SendMessage replyMessage(Dialog dialog, Update update) {
         SendMessage.SendMessageBuilder<?, ?> sendMessageBuilder = SendMessage.builder().chatId(dialog.getChatId());
 
+        Memo newMemo = dialog.getTempMemo();
+        LocalDateTime userReminderTime = newMemo.getReminderTime();
+        Period newMemoPeriod = Period.valueOf(update.getCallbackQuery().getData());
+        newMemo.setPeriod(newMemoPeriod.name());
+        newMemo.setNextEventTime(newMemoPeriod.getNextEventTime(userReminderTime));
         try {
-            Memo newMemo = parseMemoFromMessage(update.getMessage().getText());
-            LocalDateTime userReminderTime = newMemo.getReminderTime();
-            newMemo.setReminderTime(newMemo.getReminderTime().plusMinutes(dialog.getUser().getTimeOffset()));
             if (newMemo.getReminderTime().isBefore(LocalDateTime.now())) {
                 throw new IllegalTimeReminderException(userReminderTime);
             }
-            newMemo.setUserId(dialog.getUser().getUserId());
-            dialog.setTempMemo(newMemo);
-            dialog.setCurrentState(Dialog.State.GET_PERIOD);
-            return sendMessageBuilder.text(String.format(Literals.GET_NEW_MEMO_MESSAGE,
-                            userReminderTime.format(dateTimeFormatter), newMemo.getReminderText()))
+            memoService.save(newMemo);
+            dialog.setCurrentState(Dialog.State.BASIC_STATE);
+            return sendMessageBuilder.text(String.format(Literals.GET_PERIOD_MESSAGE,
+                            userReminderTime.format(dateTimeFormatter),
+                            newMemo.getReminderText(),
+                            newMemoPeriod.getText()))
                     .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
                     .parseMode(Literals.MARKDOWN_MODE)
                     .build();
@@ -58,33 +61,14 @@ public class GetNewMemoAction implements BotAction {
                     .text(Literals.ERROR_DATABASE_MESSAGE)
                     .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
                     .build();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return sendMessageBuilder
-                    .text(Literals.ERROR_MEMO_FORMAT_MESSAGE)
-                    .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
-                    .build();
         }
+
     }
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-        return dialog.getCurrentState() == Dialog.State.GET_NEW_MEMO
-                && update.hasMessage()
-                && update.getMessage().hasText()
-                && !update.getMessage().getText().equals(Literals.BUTTON_TITLE_CANCEL);
-    }
-
-    private Memo parseMemoFromMessage(String text) {
-
-        Pattern pattern = Pattern.compile("^(\\d{2}\\.\\d{2}\\.\\d{4} \\d{2}:\\d{2}) (.*)$");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.matches()) {
-            Memo memo = new Memo();
-            memo.setReminderTime(LocalDateTime.parse(matcher.group(1), dateTimeFormatter));
-            memo.setReminderText(matcher.group(2));
-            return memo;
-        }
-        throw new IllegalArgumentException(String.format("Строка %s не соответствует формату", text));
+        return dialog.getCurrentState() == Dialog.State.GET_PERIOD
+                && update.hasCallbackQuery();
     }
 }
+

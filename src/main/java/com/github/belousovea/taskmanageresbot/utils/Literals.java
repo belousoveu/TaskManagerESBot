@@ -1,6 +1,7 @@
 package com.github.belousovea.taskmanageresbot.utils;
 
 import com.github.belousovea.taskmanageresbot.model.Memo;
+import com.github.belousovea.taskmanageresbot.model.Period;
 
 import java.util.List;
 
@@ -8,10 +9,15 @@ public class Literals {
 
     public static final String BUTTON_TITLE_CANCEL = "Возврат в главное меню";
     public static final String BUTTON_TITLE_ADD_MEMO = "➕ Добавить напоминание";
-    public static final String BUTTON_TITLE_ADD_PERIODIC_MEMO = "➕ Добавить периодическое напоминание";
     public static final String BUTTON_TITLE_MEMO_LIST = "\uD83D\uDDD2 Список напоминаний";
-    public static final String BUTTON_TITLE_CALENDAR = "\uD83D\uDCC6 Календарь";
 
+    public static final String PERIOD_ONE_TIME_TEXT = "Разовое напоминание";
+    public static final String PERIOD_MINUTE_TEXT = "Ежеминутно";
+    public static final String PERIOD_HOUR_TEXT = "Каждый час";
+    public static final String PERIOD_DAY_TEXT = "Ежедневно";
+    public static final String PERIOD_WEEK_TEXT = "Еженедельно";
+    public static final String PERIOD_MONTH_TEXT = "Ежемесячно";
+    public static final String PERIOD_YEAR_TEXT = "Ежегодно";
 
     public static final String COMMAND_ABOUT = "/about";
     public static final String COMMAND_HELP = "/help";
@@ -31,10 +37,10 @@ public class Literals {
 
     public static final String COMMAND_HELP_MESSAGE = """
             Я умею запоминать сообщения и напоминать тебе о них в нужное время.
+            
             Чтобы попробовать, как это работает нажми на кнопку
              `➕ Добавить напоминание`
-            Если нужно,чтобы напоминание появлялось регулярно выбери
-            `➕ Добавить периодическое напоминание`
+            
             Список своих заметок всегда можно посмотреть нажав
             `\uD83D\uDDD2 Список напоминаний`.""";
 
@@ -60,6 +66,32 @@ public class Literals {
             Может самое время что-нибудь добавить?
             """;
 
+    public static final String GET_NEW_MEMO_MESSAGE = """
+            Подготовлено новое напоминание:
+            Дата и время: %s
+            Текст: %s
+            Выберете, как часто напоминать об этом событии?
+            """;
+
+    public static final String GET_PERIOD_MESSAGE = """
+            Сохранил для тебя новое напоминание:
+            ```
+            Дата и время: %s
+            Текст: %s
+            Периодичность: %s
+            ```
+            """;
+
+    public static final String INVALID_TIME_REMINDER_MESSAGE = """
+            Указанное время %s уже прошло.
+            Я не смогу напомнить об уже прошедшем событии. Попробуйте еще раз
+            """;
+
+
+    public static final String ERROR_DATABASE_MESSAGE = "Ошибка при записи в базу данных. Попробуйте еще раз";
+
+    public static final String ERROR_MEMO_FORMAT_MESSAGE = "Данные отсутствуют или не соответствуют формату";
+
     public static final String CANCEL_MESSAGE = "Выберете дальнейшее действие";
 
     public static final String UNKNOWN_ACTION_MESSAGE = "Я не понял, что вы хотели. Может /help поможет вам разобраться?";
@@ -69,8 +101,9 @@ public class Literals {
     public static String formatMemoList(List<Memo> memos) {
         StringBuilder sb = new StringBuilder("\n```\n");
         for (Memo memo : memos) {
-            sb.append(memo.getPeriodicityMinutes()==0 ? "⏰" : "\uD83D\uDCC5");
-            sb.append(" ").append(memo.getReminderTime()).append(" ").append(memo.getReminderText()).append("\n");
+            sb.append(memo.getPeriod().equals(Period.ONE_TIME.name()) ? "⏰" : "\uD83D\uDCC5");
+            sb.append(" ").append(memo.getReminderTime()).append(" ").append(memo.getReminderText());
+            sb.append(", ").append(Period.valueOf(memo.getPeriod()).getText()).append("\n");
         }
         sb.append("```");
         return sb.toString();

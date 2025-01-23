@@ -1,6 +1,7 @@
 package com.github.belousovea.taskmanageresbot.repository;
 
 import com.github.belousovea.taskmanageresbot.model.Memo;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -18,10 +19,8 @@ public interface MemoRepository extends ElasticsearchRepository<Memo, String> {
                   { "range": { "reminderTime": { "gte": "?1" } } }
                 ]
               }
-            },
-            "sort": [
-              { "reminderTime": { "order": "desc" } }
-            ]
+            }
+
             """)
-    List<Memo> findActiveMemosByUserId(long userId, String currentTime);
+    List<Memo> findActiveMemosByUserId(long userId, String currentTime, Sort sort);
 }

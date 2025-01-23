@@ -25,9 +25,11 @@ public class Memo {
     @NotNull
     private String reminderText;
 
-    @Field(type = FieldType.Integer)
-    @NotNull
-    private int periodicityMinutes;
+//    @Field(type = FieldType.Integer)
+//    private int periodicityMinutes;
+
+    @Field(type = FieldType.Text)
+    private String period;
 
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute)
     private LocalDateTime nextEventTime;

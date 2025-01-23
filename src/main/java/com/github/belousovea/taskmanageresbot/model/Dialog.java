@@ -27,14 +27,12 @@ public class Dialog {
 
 
     public enum State {
-        //        START,
         TIME_SETUP,
         GET_USER_TIME,
         BASIC_STATE,
         GET_NEW_MEMO,
-        GET_NEW_PERIODIC_MEMO,
-        MEMO_LIST,
-        CALENDAR
+        GET_PERIOD,
+        MEMO_LIST
 
     }
 }
