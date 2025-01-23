@@ -10,29 +10,25 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
 @Data
-public class StartAction implements BotAction {
-
-    private String name = "start";
+public class CancelButtonAction implements BotAction{
+    private final String name = "cancel";
     private final KeyboardFactory keyboardFactory;
+
 
     @Override
     public SendMessage replyMessage(Dialog dialog, Update update) {
-
-
+        dialog.setCurrentState(Dialog.State.BASIC_STATE);
+        dialog.cleanTempMemo();
         return SendMessage.builder()
                 .chatId(dialog.getChatId())
-                .text(String.format(Literals.COMMAND_START_MESSAGE, dialog.getUser().getUserName()))
+                .text(Literals.CANCEL_MESSAGE)
                 .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
-                .parseMode(Literals.MARKDOWN_MODE)
                 .build();
     }
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-
-        return dialog.getCurrentState() == Dialog.State.BASIC_STATE
-                && update.hasMessage()
-                && update.getMessage().hasText()
-                && update.getMessage().getText().toLowerCase().startsWith(Literals.COMMAND_START);
+        return update.hasMessage() && update.getMessage().hasText()
+                && update.getMessage().getText().equals(Literals.BUTTON_TITLE_CANCEL);
     }
 }

@@ -3,6 +3,7 @@ package com.github.belousovea.taskmanageresbot.bot.actions;
 
 import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
+import com.github.belousovea.taskmanageresbot.utils.Literals;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,8 +19,9 @@ public class HelpAction implements BotAction {
     public SendMessage replyMessage(Dialog dialog, Update update) {
         return SendMessage.builder()
                 .chatId(dialog.getChatId())
-                .text("This is a help message")
+                .text(Literals.COMMAND_HELP_MESSAGE)
                 .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
+                .parseMode(Literals.MARKDOWN_MODE)
                 .build();
     }
 
@@ -27,6 +29,6 @@ public class HelpAction implements BotAction {
     public boolean isApplicable(Dialog dialog, Update update) {
         return update.hasMessage()
                 && update.getMessage().hasText()
-                && update.getMessage().getText().toLowerCase().startsWith("/help");
+                && update.getMessage().getText().toLowerCase().startsWith(Literals.COMMAND_HELP);
     }
 }

@@ -21,8 +21,8 @@ public class KeyboardFactory {
                            @Qualifier("emptyKeyboard") BotReplyKeyboard emptyKeyboard) {
         this.keyboards = new EnumMap<>(State.class);
         keyboards.put(State.BASIC_STATE, mainKeyboard);
-        keyboards.put(State.ADD_NEW_MEMO, cancelKeyboard);
-        keyboards.put(State.ADD_NEW_PERIODIC_MEMO, cancelKeyboard);
+        keyboards.put(State.GET_NEW_MEMO, cancelKeyboard);
+        keyboards.put(State.GET_NEW_PERIODIC_MEMO, cancelKeyboard);
         keyboards.put(State.MEMO_LIST, cancelKeyboard);
         keyboards.put(State.TIME_SETUP, emptyKeyboard);
         keyboards.put(State.CALENDAR, cancelKeyboard);

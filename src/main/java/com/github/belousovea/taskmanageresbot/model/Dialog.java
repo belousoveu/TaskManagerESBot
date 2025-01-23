@@ -7,6 +7,7 @@ public class Dialog {
     private State currentState;
     long chatId;
     User user;
+    Memo tempMemo;
 
 
     public Dialog(long chatId, User user) {
@@ -20,13 +21,18 @@ public class Dialog {
         }
     }
 
+    public void cleanTempMemo() {
+        tempMemo = null;
+    }
+
+
     public enum State {
-//        START,
+        //        START,
         TIME_SETUP,
         GET_USER_TIME,
         BASIC_STATE,
-        ADD_NEW_MEMO,
-        ADD_NEW_PERIODIC_MEMO,
+        GET_NEW_MEMO,
+        GET_NEW_PERIODIC_MEMO,
         MEMO_LIST,
         CALENDAR
 

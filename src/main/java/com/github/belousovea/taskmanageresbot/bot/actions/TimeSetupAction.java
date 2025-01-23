@@ -2,6 +2,7 @@ package com.github.belousovea.taskmanageresbot.bot.actions;
 
 import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
+import com.github.belousovea.taskmanageresbot.utils.Literals;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,10 +23,7 @@ public class TimeSetupAction implements BotAction {
         dialog.setCurrentState(Dialog.State.GET_USER_TIME);
         return SendMessage.builder()
                 .chatId(dialog.getChatId())
-                .text(String.format("""
-                                Приветствую, %s!
-                                Давай сверим часы. У меня сейчас : %s
-                                Напиши, какое время показывают твои часы в формате HH:MM""",
+                .text(String.format(Literals.TIME_SETUP_MESSAGE,
                         update.getMessage().getFrom().getUserName(), LocalTime.now().format(formatter)))
                 .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
                 .build();

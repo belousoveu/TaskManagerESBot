@@ -3,6 +3,7 @@ package com.github.belousovea.taskmanageresbot.bot.actions;
 
 import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
+import com.github.belousovea.taskmanageresbot.utils.Literals;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,7 +20,7 @@ public class AboutAction implements BotAction {
     public SendMessage replyMessage(Dialog dialog, Update update) {
         return SendMessage.builder()
                 .chatId(dialog.getChatId())
-                .text("I'm a bot created by @belousovea")
+                .text(Literals.COMMAND_ABOUT_MESSAGE)
                 .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))
                 .build();
     }
@@ -29,6 +30,6 @@ public class AboutAction implements BotAction {
     public boolean isApplicable(Dialog dialog, Update update) {
         return update.hasMessage()
                 && update.getMessage().hasText()
-                && update.getMessage().getText().toLowerCase().startsWith("/about");
+                && update.getMessage().getText().toLowerCase().startsWith(Literals.COMMAND_ABOUT);
     }
 }

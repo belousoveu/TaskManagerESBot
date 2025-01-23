@@ -23,7 +23,11 @@ public class MainKeyboard implements BotReplyKeyboard {
                 .stream()
                 .map(b -> new KeyboardRow(((BotKeyboardButton) b).getKeyboardButton()))
                 .toList();
-        replyKeyboard = new ReplyKeyboardMarkup(keyboardRows);
+        replyKeyboard = ReplyKeyboardMarkup.builder()
+                .keyboard(keyboardRows)
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(true)
+                .build();
     }
 
 }

@@ -6,6 +6,7 @@ import com.github.belousovea.taskmanageresbot.exception.IllegalTimeReminderExcep
 import com.github.belousovea.taskmanageresbot.model.Dialog;
 import com.github.belousovea.taskmanageresbot.model.Memo;
 import com.github.belousovea.taskmanageresbot.service.MemoService;
+import com.github.belousovea.taskmanageresbot.utils.Literals;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -74,7 +75,10 @@ public class GetNewMemoAction implements BotAction{
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-        return dialog.getCurrentState() == Dialog.State.ADD_NEW_MEMO;
+        return dialog.getCurrentState() == Dialog.State.GET_NEW_MEMO
+                && update.hasMessage()
+                && update.getMessage().hasText()
+                && !update.getMessage().getText().equals(Literals.BUTTON_TITLE_CANCEL);
     }
 
     private Memo parseMemoFromMessage(String text) {
