@@ -25,20 +25,12 @@ public class DialogManager {
         this.userService = userService;
     }
 
-    public Dialog getDialog(Update update) {
-        long chatId = getChatId(update);
-        long userId = getUserId(update);
-        User user = userService.getUser(userId);
-
-        return dialogs.computeIfAbsent(chatId, k -> new Dialog(chatId, user));
-    }
-
     public SendMessage getAction(Update update) {
         if (update == null) {
             throw new NullPointerException("Update is null");
         }
         Dialog dialog = getDialog(update);
-        log.info("Actions: {}", actions.size()); //TODO убрать
+        log.debug("Actions loaded: {}", actions.size());
         BotAction defaultAction = actions.stream()
                 .filter(action -> "unknown".equals(action.getName())).findFirst().orElseThrow();
         for (BotAction action : actions) {
@@ -48,6 +40,14 @@ public class DialogManager {
         }
 
         return defaultAction.replyMessage(dialog, update);
+    }
+
+    private Dialog getDialog(Update update) {
+        long chatId = getChatId(update);
+        long userId = getUserId(update);
+        User user = userService.getUser(userId);
+
+        return dialogs.computeIfAbsent(chatId, k -> new Dialog(chatId, user));
     }
 
     private long getUserId(Update update) {

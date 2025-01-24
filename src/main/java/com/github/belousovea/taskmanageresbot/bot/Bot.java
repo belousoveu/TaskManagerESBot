@@ -27,9 +27,9 @@ import java.util.TreeSet;
 public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
 
     private final DialogManager dialogManager;
+
     @Value("${bot.token}")
     private String botToken;
-
 
     private TelegramClient client;
     private final Set<MainMenuCommand> commands;
@@ -45,7 +45,7 @@ public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateC
 
         try {
             client.execute(new SetMyCommands(commands.stream().map(MainMenuCommand::getCommand).toList()));
-            log.info("{} commands added", commands.size());
+            log.debug("{} commands added", commands.size());
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }
@@ -66,7 +66,6 @@ public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateC
         SendMessage message = dialogManager.getAction(update);
 
         sendMessage(message);
-
     }
 
     public void sendMessage(SendMessage message) {
