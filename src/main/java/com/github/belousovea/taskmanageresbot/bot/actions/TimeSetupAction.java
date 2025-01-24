@@ -31,6 +31,6 @@ public class TimeSetupAction implements BotAction {
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-        return dialog.getCurrentState()==Dialog.State.TIME_SETUP;
+        return dialog.getCurrentState() == Dialog.State.TIME_SETUP;
     }
 }

@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
 @Data
-public class MemoListAction implements BotAction{
+public class MemoListAction implements BotAction {
     private final String name = "memo_list";
     private final KeyboardFactory keyboardFactory;
     private final MemoService memoService;
@@ -24,7 +24,7 @@ public class MemoListAction implements BotAction{
                 memoListDto.getUser().getUserName(),
                 memoListDto.getNumberOfMemos(),
                 memoListDto.getNumberOfPeriodicMemos(),
-                memoListDto.getNearestMemoTime())+Literals.formatMemoList(memoListDto.getMemos());
+                memoListDto.getNearestMemoTime()) + Literals.formatMemoList(memoListDto.getMemos());
         if (memoListDto.getMemos().isEmpty()) {
             text = String.format(Literals.MEMO_EMPTY_LIST_MESSAGE, memoListDto.getUser().getUserName());
         }
@@ -39,7 +39,7 @@ public class MemoListAction implements BotAction{
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-        return dialog.getCurrentState()==Dialog.State.BASIC_STATE
+        return dialog.getCurrentState() == Dialog.State.BASIC_STATE
                 && update.hasMessage()
                 && update.getMessage().hasText()
                 && update.getMessage().getText().equals(Literals.BUTTON_TITLE_MEMO_LIST);

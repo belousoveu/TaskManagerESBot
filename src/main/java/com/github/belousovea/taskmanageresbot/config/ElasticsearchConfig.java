@@ -16,7 +16,7 @@ public class ElasticsearchConfig extends ElasticsearchConfigurationSupport {
 
     @Override
     public @NotNull ElasticsearchCustomConversions elasticsearchCustomConversions() {
-        List<Converter<?,?>> converters = new ArrayList<>();
+        List<Converter<?, ?>> converters = new ArrayList<>();
         converters.add(new LocalDateTimeToStringConverter());
         converters.add(new StringToLocalDateTimeConverter());
         return new ElasticsearchCustomConversions(converters);

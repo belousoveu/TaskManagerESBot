@@ -27,7 +27,7 @@ public class AddMemoAction implements BotAction {
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-        return dialog.getCurrentState()==Dialog.State.BASIC_STATE
+        return dialog.getCurrentState() == Dialog.State.BASIC_STATE
                 && update.hasMessage()
                 && update.getMessage().hasText()
                 && update.getMessage().getText().equals(Literals.BUTTON_TITLE_ADD_MEMO);

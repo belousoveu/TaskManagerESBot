@@ -62,7 +62,7 @@ public class GetUserTimeAction implements BotAction {
 
     @Override
     public boolean isApplicable(Dialog dialog, Update update) {
-        return dialog.getCurrentState()== Dialog.State.GET_USER_TIME;
+        return dialog.getCurrentState() == Dialog.State.GET_USER_TIME;
     }
 
     private String parseTimeFromMessage(String userMessage) {

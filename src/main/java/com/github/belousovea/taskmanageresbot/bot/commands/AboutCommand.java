@@ -7,6 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 @Component
 public class AboutCommand extends MainMenuCommand {
     public AboutCommand() {
-        super(3,new BotCommand(Literals.COMMAND_ABOUT, Literals.COMMAND_ABOUT_DESCRIPTION));
+        super(3, new BotCommand(Literals.COMMAND_ABOUT, Literals.COMMAND_ABOUT_DESCRIPTION));
     }
 }

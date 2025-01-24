@@ -4,6 +4,9 @@ import com.github.belousovea.taskmanageresbot.model.User;
 import com.github.belousovea.taskmanageresbot.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class UserService {
 
@@ -27,5 +30,9 @@ public class UserService {
                 .timeOffset(offsetInMinutes)
                 .build();
         return userRepository.save(user);
+    }
+
+    public List<User> getUsers(Set<Long> userIdSet) {
+        return userRepository.findByUserIdIn(userIdSet);
     }
 }

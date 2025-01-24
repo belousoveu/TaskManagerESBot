@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class AddMemo extends BotKeyboardButton implements MainMenu{
+public class AddMemo extends BotKeyboardButton implements MainMenu {
 
     public AddMemo() {
         super(1, Literals.BUTTON_TITLE_ADD_MEMO);

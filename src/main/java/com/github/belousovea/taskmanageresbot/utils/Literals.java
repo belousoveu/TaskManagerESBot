@@ -87,6 +87,11 @@ public class Literals {
             Я не смогу напомнить об уже прошедшем событии. Попробуйте еще раз
             """;
 
+    public static final String REMINDER_MESSAGE = """
+            Привет, *%s*!
+            Ты просил меня напомнить о
+            *%s*
+            """;
 
     public static final String ERROR_DATABASE_MESSAGE = "Ошибка при записи в базу данных. Попробуйте еще раз";
 
@@ -101,9 +106,14 @@ public class Literals {
     public static String formatMemoList(List<Memo> memos) {
         StringBuilder sb = new StringBuilder("\n```\n");
         for (Memo memo : memos) {
-            sb.append(memo.getPeriod().equals(Period.ONE_TIME.name()) ? "⏰" : "\uD83D\uDCC5");
-            sb.append(" ").append(memo.getReminderTime()).append(" ").append(memo.getReminderText());
-            sb.append(", ").append(Period.valueOf(memo.getPeriod()).getText()).append("\n");
+            sb.append(memo.isRepetitive() ? "\uD83D\uDCC5" : "⏰")
+                    .append(" ")
+                    .append(memo.getReminderTime().toString().replace("T", " "))
+                    .append(" ")
+                    .append(memo.getReminderText())
+                    .append(", ")
+                    .append(Period.valueOf(memo.getPeriod()).getText())
+                    .append("\n");
         }
         sb.append("```");
         return sb.toString();

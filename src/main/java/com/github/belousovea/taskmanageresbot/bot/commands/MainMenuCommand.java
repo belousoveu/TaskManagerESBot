@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 
 @Getter
-public abstract class MainMenuCommand {
+public abstract class MainMenuCommand implements Comparable<MainMenuCommand> {
     private final int order;
     private final BotCommand command;
 
@@ -13,6 +13,7 @@ public abstract class MainMenuCommand {
         this.command = command;
     }
 
+    @Override
     public int compareTo(MainMenuCommand command) {
         return this.order - command.order;
     }

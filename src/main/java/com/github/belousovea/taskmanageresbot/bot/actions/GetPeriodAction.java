@@ -34,15 +34,14 @@ public class GetPeriodAction implements BotAction {
         LocalDateTime userReminderTime = newMemo.getReminderTime();
         Period newMemoPeriod = Period.valueOf(update.getCallbackQuery().getData());
         newMemo.setPeriod(newMemoPeriod.name());
-        newMemo.setNextEventTime(newMemoPeriod.getNextEventTime(userReminderTime));
         try {
             if (newMemo.getReminderTime().isBefore(LocalDateTime.now())) {
-                throw new IllegalTimeReminderException(userReminderTime);
+                throw new IllegalTimeReminderException(userReminderTime.minusMinutes(dialog.getUser().getTimeOffset()));
             }
             memoService.save(newMemo);
             dialog.setCurrentState(Dialog.State.BASIC_STATE);
             return sendMessageBuilder.text(String.format(Literals.GET_PERIOD_MESSAGE,
-                            userReminderTime.format(dateTimeFormatter),
+                            userReminderTime.minusMinutes(dialog.getUser().getTimeOffset()).format(dateTimeFormatter),
                             newMemo.getReminderText(),
                             newMemoPeriod.getText()))
                     .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState()))

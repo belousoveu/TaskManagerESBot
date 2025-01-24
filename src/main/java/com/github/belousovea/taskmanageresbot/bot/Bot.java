@@ -19,7 +19,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Slf4j
 @Component
@@ -31,11 +32,10 @@ public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateC
 
 
     private TelegramClient client;
-    private final List<MainMenuCommand> commands;
+    private final Set<MainMenuCommand> commands;
 
-    public Bot(List<MainMenuCommand> commands, DialogManager dialogManager) {
-        commands.sort(MainMenuCommand::compareTo);
-        this.commands = commands;
+    public Bot(Set<MainMenuCommand> commands, DialogManager dialogManager) {
+        this.commands = new TreeSet<>(commands);
         this.dialogManager = dialogManager;
     }
 
@@ -65,13 +65,16 @@ public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateC
     public void consume(Update update) {
         SendMessage message = dialogManager.getAction(update);
 
+        sendMessage(message);
 
+    }
+
+    public void sendMessage(SendMessage message) {
         try {
             client.execute(message);
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }
-
     }
 
     @AfterBotRegistration

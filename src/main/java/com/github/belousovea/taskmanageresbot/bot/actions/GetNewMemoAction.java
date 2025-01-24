@@ -80,10 +80,10 @@ public class GetNewMemoAction implements BotAction {
         Pattern pattern = Pattern.compile("^(\\d{2}\\.\\d{2}\\.\\d{4} \\d{2}:\\d{2}) (.*)$");
         Matcher matcher = pattern.matcher(text);
         if (matcher.matches()) {
-            Memo memo = new Memo();
-            memo.setReminderTime(LocalDateTime.parse(matcher.group(1), dateTimeFormatter));
-            memo.setReminderText(matcher.group(2));
-            return memo;
+            return Memo.builder()
+                    .reminderTime(LocalDateTime.parse(matcher.group(1), dateTimeFormatter))
+                    .reminderText(matcher.group(2))
+                    .build();
         }
         throw new IllegalArgumentException(String.format("Строка %s не соответствует формату", text));
     }

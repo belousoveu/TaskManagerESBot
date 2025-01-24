@@ -8,17 +8,18 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Component("mainKeyboard")
 @Getter
 public class MainKeyboard implements BotReplyKeyboard {
 
-    private final List<MainMenu> buttons;
+    private final Set<MainMenu> buttons;
     private final ReplyKeyboardMarkup replyKeyboard;
 
-    public MainKeyboard(List<MainMenu> buttons) {
-        this.buttons = buttons.stream()
-                .sorted((a, b) -> ((BotKeyboardButton) a).compareTo(((BotKeyboardButton) b))).toList();
+    public MainKeyboard(Set<MainMenu> buttons) {
+        this.buttons = new TreeSet<>(buttons);
         List<KeyboardRow> keyboardRows = buttons
                 .stream()
                 .map(b -> new KeyboardRow(((BotKeyboardButton) b).getKeyboardButton()))
