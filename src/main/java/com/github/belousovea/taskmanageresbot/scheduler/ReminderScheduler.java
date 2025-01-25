@@ -9,6 +9,7 @@ import com.github.belousovea.taskmanageresbot.utils.Literals;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -88,6 +89,7 @@ public class ReminderScheduler {
     }
 
     @EventListener
+    @Profile("!test")
     private void addReminder(AddedNewMemoEvent event) {
         if (event.getMemo().getReminderTime().getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
             log.debug("Added reminder: {}", event);

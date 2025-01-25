@@ -5,6 +5,7 @@ import com.github.belousovea.taskmanageresbot.model.Memo;
 import com.github.belousovea.taskmanageresbot.model.MemoListDto;
 import com.github.belousovea.taskmanageresbot.model.Period;
 import com.github.belousovea.taskmanageresbot.repository.MemoRepository;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@Getter
 public class MemoService {
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat.date_hour_minute.getPattern());

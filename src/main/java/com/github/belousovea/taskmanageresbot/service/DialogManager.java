@@ -3,6 +3,7 @@ package com.github.belousovea.taskmanageresbot.service;
 import com.github.belousovea.taskmanageresbot.bot.actions.BotAction;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
 import com.github.belousovea.taskmanageresbot.model.User;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
+@Getter
 public class DialogManager {
 
     private final Map<Long, Dialog> dialogs = new HashMap<>();
@@ -23,6 +25,7 @@ public class DialogManager {
     public DialogManager(List<BotAction> actions, UserService userService) {
         this.actions = actions;
         this.userService = userService;
+        log.debug("Actions loaded: {}", actions.size());
     }
 
     public SendMessage getAction(Update update) {
@@ -30,7 +33,7 @@ public class DialogManager {
             throw new NullPointerException("Update is null");
         }
         Dialog dialog = getDialog(update);
-        log.debug("Actions loaded: {}", actions.size());
+
         BotAction defaultAction = actions.stream()
                 .filter(action -> "unknown".equals(action.getName())).findFirst().orElseThrow();
         for (BotAction action : actions) {
