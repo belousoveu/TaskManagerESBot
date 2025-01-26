@@ -87,6 +87,10 @@ public class Literals {
             Я не смогу напомнить об уже прошедшем событии. Попробуйте еще раз
             """;
 
+    public static final String GET_USER_TIME_MESSAGE = "Ок. Я посчитал разницу и буду учитывать ее при напоминаниях";
+
+    public static final String INVALID_TIME_FORMAT_MESSAGE = "Я не смог понять, который у вас час. Пришлите еще раз время в формате ЧЧ:ММ";
+
     public static final String REMINDER_MESSAGE = """
             Привет, *%s*!
             Ты просил меня напомнить о

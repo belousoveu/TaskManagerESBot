@@ -4,6 +4,7 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import com.github.belousovea.taskmanageresbot.bot.keyboards.KeyboardFactory;
 import com.github.belousovea.taskmanageresbot.model.Dialog;
 import com.github.belousovea.taskmanageresbot.service.UserService;
+import com.github.belousovea.taskmanageresbot.utils.Literals;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -41,16 +42,16 @@ public class GetUserTimeAction implements BotAction {
             long offsetInMinutes = Duration.between(LocalTime.now(), userTime).toMinutes();
             dialog.setUser(userService.saveUser(update.getMessage().getFrom(), offsetInMinutes));
             dialog.setCurrentState(Dialog.State.BASIC_STATE);
-            return sendMessageBuilder.text("Ок. Я посчитал разницу и буду учитывать ее при напоминаниях")
+            return sendMessageBuilder.text(Literals.GET_USER_TIME_MESSAGE)
                     .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState())).build();
         } catch (ElasticsearchException e) {
             log.error(e.getMessage());
-            return sendMessageBuilder.text("Не удалось сохранить данные. Попробуйте еще раз")
+            return sendMessageBuilder.text(Literals.ERROR_DATABASE_MESSAGE)
                     .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState())).build();
         } catch (Exception e) {
             log.error(e.getMessage());
             return sendMessageBuilder
-                    .text("Я не смог понять, который у вас час. Пришлите еще раз время в формате ЧЧ:ММ")
+                    .text(Literals.INVALID_TIME_FORMAT_MESSAGE)
                     .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState())).build();
         }
     }
