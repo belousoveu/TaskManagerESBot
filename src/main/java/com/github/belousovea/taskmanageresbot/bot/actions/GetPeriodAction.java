@@ -21,7 +21,6 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Data
 public class GetPeriodAction implements BotAction {
-    private final String name = "get_period";
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final KeyboardFactory keyboardFactory;
     private final MemoService memoService;
@@ -40,6 +39,7 @@ public class GetPeriodAction implements BotAction {
             }
             memoService.save(newMemo);
             dialog.setCurrentState(Dialog.State.BASIC_STATE);
+            dialog.setTempMemo(null);
             return sendMessageBuilder.text(String.format(Literals.GET_PERIOD_MESSAGE,
                             userReminderTime.minusMinutes(dialog.getUser().getTimeOffset()).format(dateTimeFormatter),
                             newMemo.getReminderText(),

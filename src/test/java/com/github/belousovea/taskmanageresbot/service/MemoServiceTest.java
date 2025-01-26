@@ -38,8 +38,6 @@ import static org.mockito.Mockito.*;
 class MemoServiceTest {
 
 
-
-
     @MockitoBean
     private ApplicationEventPublisher eventPublisher;
 
@@ -54,8 +52,6 @@ class MemoServiceTest {
 
     @Container
     static ElasticsearchContainer container = new ElasticsearchContainer(DockerImageName.parse("elasticsearch:7.17.27"));
-
-
 
 
     @DynamicPropertySource
@@ -156,7 +152,7 @@ class MemoServiceTest {
         assertEquals(1, memoList.size());
         assertEquals("test", memoList.get(0).getReminderText());
         assertEquals(Period.DAY.getNextEventTime(newMemo.getReminderTime())
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")),
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")),
                 memoList.get(0).getReminderTime().toString());
         verify(eventPublisher, times(1)).publishEvent(any(AddedNewMemoEvent.class));
     }

@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @Data
 public class MemoListAction implements BotAction {
-    private final String name = "memo_list";
     private final KeyboardFactory keyboardFactory;
     private final MemoService memoService;
 

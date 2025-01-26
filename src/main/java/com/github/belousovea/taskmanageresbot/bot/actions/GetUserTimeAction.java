@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 @Slf4j
 public class GetUserTimeAction implements BotAction {
 
-    private String name = "get_user_time";
     private final UserService userService;
     private final KeyboardFactory keyboardFactory;
 
@@ -54,11 +53,6 @@ public class GetUserTimeAction implements BotAction {
                     .text(Literals.INVALID_TIME_FORMAT_MESSAGE)
                     .replyMarkup(keyboardFactory.getKeyboard(dialog.getCurrentState())).build();
         }
-    }
-
-    @Override
-    public String getName() {
-        return "getUserTime";
     }
 
     @Override

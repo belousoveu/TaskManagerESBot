@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @Data
 public class HelpAction implements BotAction {
-    private String name = "help";
     private final KeyboardFactory keyboardFactory;
 
     @Override

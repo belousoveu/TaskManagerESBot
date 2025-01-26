@@ -24,7 +24,7 @@ public class KeyboardFactory {
         keyboards.put(State.BASIC_STATE, mainKeyboard);
         keyboards.put(State.GET_NEW_MEMO, cancelKeyboard);
         keyboards.put(State.GET_PERIOD, setPeriodKeyboard);
-        keyboards.put(State.MEMO_LIST, cancelKeyboard);
+        keyboards.put(State.INVALID_STATE, cancelKeyboard);
         keyboards.put(State.TIME_SETUP, emptyKeyboard);
         keyboards.put(State.GET_USER_TIME, emptyKeyboard);
 

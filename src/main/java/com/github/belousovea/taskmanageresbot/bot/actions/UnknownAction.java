@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @Data
 public class UnknownAction implements BotAction {
-    private String name = "unknown";
     private final KeyboardFactory keyboardFactory;
 
     @Override

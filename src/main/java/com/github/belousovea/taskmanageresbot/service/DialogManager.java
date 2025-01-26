@@ -5,6 +5,7 @@ import com.github.belousovea.taskmanageresbot.model.Dialog;
 import com.github.belousovea.taskmanageresbot.model.User;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -21,10 +22,13 @@ public class DialogManager {
     private final Map<Long, Dialog> dialogs = new HashMap<>();
     private final List<BotAction> actions;
     private final UserService userService;
+    private final BotAction defaultAction;
 
-    public DialogManager(List<BotAction> actions, UserService userService) {
+    public DialogManager(List<BotAction> actions, UserService userService,
+                         @Qualifier("unknownAction") BotAction defaultAction) {
         this.actions = actions;
         this.userService = userService;
+        this.defaultAction = defaultAction;
         log.debug("Actions loaded: {}", actions.size());
     }
 
@@ -34,10 +38,8 @@ public class DialogManager {
         }
         Dialog dialog = getDialog(update);
 
-        BotAction defaultAction = actions.stream()
-                .filter(action -> "unknown".equals(action.getName())).findFirst().orElseThrow();
         for (BotAction action : actions) {
-            if (!action.getName().equals(defaultAction.getName()) && action.isApplicable(dialog, update)) {
+            if (action.isApplicable(dialog, update)) {
                 return action.replyMessage(dialog, update);
             }
         }

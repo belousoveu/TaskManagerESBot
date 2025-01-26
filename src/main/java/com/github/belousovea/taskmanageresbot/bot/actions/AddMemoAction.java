@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @Data
 public class AddMemoAction implements BotAction {
-    private String name = "memo";
     private final KeyboardFactory keyboardFactory;
 
     @Override

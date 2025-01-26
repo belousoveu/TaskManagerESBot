@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 @Data
 @Slf4j
 public class GetNewMemoAction implements BotAction {
-    private String name = "new_memo";
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final KeyboardFactory keyboardFactory;
 

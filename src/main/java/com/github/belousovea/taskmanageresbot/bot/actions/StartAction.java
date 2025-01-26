@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Data
 public class StartAction implements BotAction {
 
-    private String name = "start";
     private final KeyboardFactory keyboardFactory;
 
     @Override

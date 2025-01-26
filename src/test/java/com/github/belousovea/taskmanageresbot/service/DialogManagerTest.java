@@ -41,7 +41,7 @@ class DialogManagerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         List<BotAction> actions = List.of(defaultBotAction, botAction);
-        dialogManager = new DialogManager(actions, userService);
+        dialogManager = new DialogManager(actions, userService, defaultBotAction);
 
     }
 
@@ -51,8 +51,6 @@ class DialogManagerTest {
         Update update = TestData.mockUpdate().user(TEST_USER).build();
 
         when(userService.getUser(1L)).thenReturn(TEST_USER);
-        when(defaultBotAction.getName()).thenReturn("unknown");
-        when(botAction.getName()).thenReturn("test");
         when(botAction.isApplicable(any(Dialog.class), eq(update))).thenReturn(true);
         when(botAction.replyMessage(any(Dialog.class), eq(update))).thenReturn(TEST_MESSAGE);
 
@@ -63,7 +61,6 @@ class DialogManagerTest {
 
         verify(botAction).isApplicable(any(Dialog.class), eq(update));
         verify(botAction, times(1)).replyMessage(any(Dialog.class), eq(update));
-        verify(defaultBotAction, times(0)).isApplicable(any(Dialog.class), eq(update));
         verify(defaultBotAction, times(0)).replyMessage(any(Dialog.class), eq(update));
         verify(userService).getUser(1L);
 
@@ -75,8 +72,6 @@ class DialogManagerTest {
         Update update = TestData.mockUpdate().user(TEST_USER).build();
 
         when(userService.getUser(1L)).thenReturn(TEST_USER);
-        when(defaultBotAction.getName()).thenReturn("unknown");
-        when(botAction.getName()).thenReturn("test");
         when(botAction.isApplicable(any(Dialog.class), eq(update))).thenReturn(false);
         when(defaultBotAction.replyMessage(any(Dialog.class), eq(update))).thenReturn(TEST_MESSAGE);
 
@@ -87,7 +82,6 @@ class DialogManagerTest {
 
         verify(botAction).isApplicable(any(Dialog.class), eq(update));
         verify(botAction, times(0)).replyMessage(any(Dialog.class), eq(update));
-        verify(defaultBotAction, times(0)).isApplicable(any(Dialog.class), eq(update));
         verify(defaultBotAction, times(1)).replyMessage(any(Dialog.class), eq(update));
         verify(userService).getUser(1L);
 

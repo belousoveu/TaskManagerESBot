@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @Data
 public class CancelButtonAction implements BotAction {
-    private final String name = "cancel";
     private final KeyboardFactory keyboardFactory;
 
 

@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @Data
 public class AboutAction implements BotAction {
-    private String name = "about";
     private final KeyboardFactory keyboardFactory;
 
     @Override

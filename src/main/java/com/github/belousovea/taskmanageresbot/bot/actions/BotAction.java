@@ -9,7 +9,5 @@ public interface BotAction {
 
     SendMessage replyMessage(Dialog dialog, Update update);
 
-    String getName();
-
     boolean isApplicable(Dialog dialog, Update update);
 }

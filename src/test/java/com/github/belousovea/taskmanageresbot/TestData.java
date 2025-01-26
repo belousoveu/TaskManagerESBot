@@ -1,15 +1,17 @@
 package com.github.belousovea.taskmanageresbot;
 
-import com.github.belousovea.taskmanageresbot.model.Memo;
-import com.github.belousovea.taskmanageresbot.model.Period;
-import com.github.belousovea.taskmanageresbot.model.User;
+import com.github.belousovea.taskmanageresbot.model.*;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 public class TestData {
@@ -18,6 +20,18 @@ public class TestData {
     public final static User NEW_USER = User.builder().userId(2L).userName("newUser").firstName("testFirstName").build();
 
     public final static SendMessage TEST_MESSAGE = SendMessage.builder().chatId(1L).text("test").build();
+
+    public final static String TEST_CORRECT_MEMO_ANSWER = dateTimeString(LocalDateTime.now().plusMinutes(5L)) + " reminder text";
+    public final static String TEST_INVALID_MEMO_ANSWER = "Any invalid text";
+    public final static String TEST_PAST_TIME_MEMO_ANSWER = dateTimeString(LocalDateTime.now().minusMinutes(5L)) + " reminder text";
+
+
+    private static String dateTimeString(LocalDateTime localDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        return localDateTime.format(formatter);
+    }
+
+    public final static ReplyKeyboard TEST_KEYBOARD = ReplyKeyboardMarkup.builder().build();
 
     public final static Memo PAST_MEMO = Memo.builder()
             .reminderTime(LocalDateTime.now().minusMinutes(5L))
@@ -65,6 +79,12 @@ public class TestData {
                 .build();
     }
 
+    public static Dialog mockDialog(Dialog.State state) {
+        Dialog dialog = new Dialog(TEST_USER.getUserId(), TEST_USER);
+        dialog.setCurrentState(state);
+        return dialog;
+    }
+
     public static MockUpdate mockUpdate() {
         return new MockUpdate();
     }
@@ -76,6 +96,26 @@ public class TestData {
                 .firstName(TEST_USER.getFirstName())
                 .isBot(false)
                 .build();
+    }
+
+    public static MemoListDto mockMemoListDto(User user, List<Memo> memos) {
+        MemoListDto dto = new MemoListDto();
+        dto.setUser(user);
+        dto.setMemos(memos);
+        if (!memos.isEmpty()) {
+            dto.setNumberOfPeriodicMemos((int) memos.stream().filter(Memo::isRepetitive).count());
+            dto.setNumberOfMemos(memos.size() - dto.getNumberOfPeriodicMemos());
+            dto.setNearestMemoTime(memos.stream().min(Comparator.comparing(Memo::getReminderTime)).get().getReminderTime()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        }
+        return dto;
+    }
+
+    public static CallbackQuery mockCallbackQuery(String text) {
+        CallbackQuery callbackQuery = new CallbackQuery();
+        callbackQuery.setFrom(getMockTelegramUser());
+        callbackQuery.setData(text);
+        return callbackQuery;
     }
 
     public static List<Memo> getTestMemos() {

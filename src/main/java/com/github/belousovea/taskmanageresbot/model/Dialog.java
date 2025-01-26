@@ -32,7 +32,7 @@ public class Dialog {
         BASIC_STATE,
         GET_NEW_MEMO,
         GET_PERIOD,
-        MEMO_LIST
+        INVALID_STATE
 
     }
 }

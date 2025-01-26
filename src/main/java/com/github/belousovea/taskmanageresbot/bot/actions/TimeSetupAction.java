@@ -14,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 @Component
 @Data
 public class TimeSetupAction implements BotAction {
-    private String name = "time_setup";
     private final KeyboardFactory keyboardFactory;
 
     @Override
